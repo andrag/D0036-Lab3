@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 public class Server {
 
 	
-	private final static int PORT = 444;
+	private final static int PORT = 4444;
 
 	public static MasterGameState GameState = new MasterGameState();
 

@@ -13,7 +13,7 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import javafx.scene.control.ScrollBar;
+//import javafx.scene.control.ScrollBar;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -29,7 +29,7 @@ public class GameClientGUI extends JFrame{
 	public static Board board;
 	public static String userName = "Anonymous";//Detta borde vara dynamiskt.
 	public static String team = "No team";
-	private static int PORT = 444;
+	private static int PORT = 4444;
 	private static String HOST = "Datamaskinen";
 	
 	private int width = 1000;
@@ -72,12 +72,10 @@ public class GameClientGUI extends JFrame{
 	public static JPanel logInPanel = new JPanel();
 	public static JLabel teamLabel = new JLabel("Choose team: ");
 	
-	public static JTextField ip_field = new JTextField(15);
+	public static JTextField ip_field = new JTextField("localhost", 15);
 	public static JLabel enterIP = new JLabel("Server IP: ");
-	public static JTextField port_field = new JTextField(15);
+	public static JTextField port_field = new JTextField("4444", 15);
 	public static JLabel enterPort = new JLabel("Server port: ");
-	public static JLabel defaultPort = new JLabel("(Default port is 444)");
-	
 	
 	//Team pictures
 	public static BufferedImage imperial;
@@ -283,10 +281,6 @@ public class GameClientGUI extends JFrame{
 		size = port_field.getPreferredSize();
 		port_field.setBounds(110, 105, (int)size.getWidth(), (int)size.getHeight());
 		
-		logInFrame.add(defaultPort);
-		size = defaultPort.getPreferredSize();
-		defaultPort.setBounds(10, 135, (int)size.getWidth(), (int)size.getHeight());
-		
 		logInFrame.add(connectButton);
 		size = connectButton.getPreferredSize();
 		connectButton.setBounds(197, 130, (int)size.getWidth(), (int)size.getHeight());
@@ -306,7 +300,7 @@ public class GameClientGUI extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
+				String error = "";
 				if(!ip_field.getText().equals("")){
 					HOST = ip_field.getText();//Does not handle faulty syntax
 				}
@@ -330,6 +324,8 @@ public class GameClientGUI extends JFrame{
 				}
 				else{
 					JOptionPane.showMessageDialog(null, "Please enter a name!");
+					allianceButton.setEnabled(true);
+					imperialButton.setEnabled(true);
 				}
 				board.requestFocus();
 				
