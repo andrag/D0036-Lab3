@@ -1,0 +1,24 @@
+package network;
+
+import java.net.DatagramSocket;
+
+public class UDPUpdateThread extends Thread{
+
+	private final int FPS = 40;
+	private long startTime, sleepTime;
+	private DatagramSocket serverSocket;
+
+	public UDPUpdateThread(){
+		serverSocket = new DatagramSocket(9876);
+		
+	}
+	
+	
+	@Override
+	public void run() {
+		super.run();
+		
+		
+		
+	}
+}

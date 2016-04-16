@@ -15,12 +15,16 @@ import java.net.Socket;
 
 //import javafx.scene.control.ScrollBar;
 
+
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import network.Client;
+import network.ClientUDPReceiverThread;
 import network.Server;
 import network.Message;
+import network.UDPUpdateThread;
 
 
 public class GameClientGUI extends JFrame{
@@ -365,6 +369,8 @@ public class GameClientGUI extends JFrame{
 	
 	public static void connect(){
 		
+		
+		
 		try{
 			//final int PORT = 444;
 			//final String HOST = "Datamaskinen";
@@ -388,6 +394,15 @@ public class GameClientGUI extends JFrame{
 			e.printStackTrace();
 			System.exit(0);
 		}
+		
+		try {
+			ClientUDPReceiverThread udpReceiver = new ClientUDPReceiverThread();
+			udpReceiver.start();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	

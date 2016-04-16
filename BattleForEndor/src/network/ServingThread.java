@@ -33,6 +33,8 @@ public class ServingThread implements Runnable{
 
 		UpdateThread heartbeat = new UpdateThread(oos, socket);	
 		heartbeat.startTimer();
+		
+		//Make a udp-heartbeat-thread for each client too?
 
 		while(true){
 			receive();
@@ -81,6 +83,8 @@ public class ServingThread implements Runnable{
 			String team = data[1];
 
 			//Send back id and position to the newly joined user
+			//This can be modified to add a unique port number for every users udp traffic
+			//If I want to run everything localhost.
 			String returnData = MasterGameState.addNewPlayer(team, userName);
 			sendJoinReply(returnData);
 		}

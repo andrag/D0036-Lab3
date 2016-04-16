@@ -29,7 +29,7 @@ public class Server {
 	private static List<ServingThread> ClientThreads = Collections.synchronizedList(new ArrayList<ServingThread>());
 
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 
 		ServerSocket server;
 
@@ -37,6 +37,9 @@ public class Server {
 		try {
 			server = new ServerSocket(PORT);
 			System.out.println("Server is running.");
+			UDPUpdateThread udpThread = new UDPUpdateThread();
+			udpThread.start();
+			udpThread.setRunning(true);
 
 			while(true){
 				Socket pipe = server.accept();

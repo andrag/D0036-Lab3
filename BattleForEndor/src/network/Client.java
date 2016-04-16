@@ -10,6 +10,9 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Iterator;
@@ -23,11 +26,15 @@ public class Client implements Runnable{
 	private Socket socketConnection = null;
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
-
+	
 	public Client(Socket socket, Board board, ObjectOutputStream oos){
 		this.socket = socket;
 		this.board = board;
 		this.oos = oos;
+	}
+	
+	public void setUpUDPReceiver(){
+		
 	}
 
 	@Override

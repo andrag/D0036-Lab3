@@ -1,0 +1,19 @@
+package network;
+
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+
+public class ClientUDPReceiverThread {
+	
+	
+	private DatagramSocket clientUDPSocket;
+	private InetAddress IPAddress;
+	private byte[] receiveData;
+	private DatagramPacket receivePacket;
+	
+	
+	public ClientUDPReceiverThread(){
+		
+	}
+}

@@ -1,0 +1,34 @@
+package network;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+
+public class ClientUDPReceiverThread extends Thread{
+		
+	
+	public ClientUDPReceiverThread() throws IOException{
+		listen();
+	}
+	
+
+	@Override
+	public void run(){
+		super.run();
+		while(true){
+			DatagramSocket clientUDPSocket = new DatagramSocket();
+			InetAddress IPAddress = InetAddress.getByName("localhost");
+			byte[] receiveData = new byte[1024];
+			DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+			clientUDPSocket.receive(receivePacket);
+			String received = new String(receivePacket.getData());
+			clientUDPSocket.close();
+			System.out.println("Client received UDP packet from server: " + received);
+		}
+	}
+	
+	
+}

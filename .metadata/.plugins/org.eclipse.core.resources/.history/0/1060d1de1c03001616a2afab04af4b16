@@ -1,0 +1,17 @@
+package network;
+
+public class UDPUpdateThread extends Thread{
+
+	private final int FPS = 40;
+
+	public UDPUpdateThread(){
+		
+	}
+	
+	
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		super.run();
+	}
+}

@@ -1,0 +1,155 @@
+package network;
+
+import game_state.Entity;
+import game_state.MasterGameState;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.concurrent.ConcurrentSkipListMap;
+
+//import com.sun.glass.events.KeyEvent;
+
+public class ServingThread implements Runnable{
+
+	/**
+	 * This thread serves a specific client. 
+	 */
+
+	private Socket socket;
+	private ObjectInputStream ois;
+	private ObjectOutputStream oos;
+
+
+	public ServingThread(Socket socket, ObjectOutputStream oos, ObjectInputStream ois){
+		this.socket = socket;
+		this.oos = oos;
+		this.ois = ois;
+	}
+
+	@Override
+	public void run() {
+
+		UpdateThread heartbeat = new UpdateThread(oos, socket);	
+		heartbeat.startTimer();
+		
+		//Make a udp-heartbeat-thread for each client too?
+
+		while(true){
+			receive();
+		}
+	}
+
+
+	
+	
+	//_________________________RECEIVING METHODS___________________________________________________________________________
+	
+	
+	private void receive(){
+		Message input;
+		try {
+			input = (Message) ois.readObject();
+			handleInputMessage(input);
+		} catch (ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void handleInputMessage(Message input) throws IOException {
+		// Bör hanteras i egen tråd om det tar för lång tid...
+		if(input.getType().equals("string")){
+			//Detta är chattmeddelande.
+
+			
+		}
+		else if(input.getType().equals("moverequest")){
+			//This is a move request: int id, int key,
+			String str = input.getString();
+			String[] keyData = str.split(",");
+			int id = Integer.parseInt(keyData[0]);
+			int key = Integer.parseInt(keyData[1]);
+			int type = Integer.parseInt(keyData[2]);
+			MasterGameState.updateEntitySpeed(id, key, type);
+		}
+		
+		else if(input.getType().equals("joinrequest")){
+			//Join message structure: username,team
+			String str = input.getString();
+			String[] data = str.split(",");
+			String userName = data[0];//Till chatten
+			String team = data[1];
+
+			//Send back id and position to the newly joined user
+			//2016-04-16 Add port number for UDP to this
+			String returnData = MasterGameState.addNewPlayer(team, userName);
+			sendJoinReply(returnData);
+		}
+
+		else if(input.getType().equals("playerhit")){
+			String str = input.getString();
+			String[] data = str.split(",");
+			int playerID = Integer.parseInt(data[0]);
+			int projectileID = Integer.parseInt(data[1]);
+			MasterGameState.ProcessHit(playerID, projectileID);
+		}
+		
+		else if(input.getType().equals("projectile")){
+			//Someone is shooting
+			System.out.println("En klient har tryckt space.");
+			String msg = input.getString();
+			String[] data = msg.split(",");
+			String team = data[0];
+			int x = Integer.parseInt(data[1]);
+			int y = Integer.parseInt(data[2]);
+			MasterGameState.fire(team, x, y);
+			
+		}
+	}
+	
+	
+	
+	
+	//___________________________SENDING METHODS___________________________________________________________________________
+	
+	
+	public synchronized void sendJoinReply(String returnData) throws IOException{
+		synchronized (oos) {
+			Message returnMessage = new Message("joinreply", returnData);
+			oos.writeObject(returnMessage);
+			oos.flush();
+		}
+	}
+	
+	public synchronized void sendFire(String team, int x, int y, int id) throws IOException {
+		synchronized (oos) {
+			String str = team+","+x+","+y+","+id;
+			Message message = new Message("fire", str);
+			oos.writeObject(message);
+			oos.flush();
+		}
+		
+	}
+	
+	public synchronized void sendHit(int id, int projectileID) throws IOException{
+		
+		synchronized (oos) {
+			
+			String str = id+","+projectileID;
+			Message message = new Message("playerhit", str);
+			oos.writeObject(message);
+			oos.flush();
+		}
+	}
+
+	public synchronized void sendKill(int id) throws IOException{
+		System.out.println("Send kill information to client.");
+		synchronized (oos) {
+			Message message = new Message("kill", id);
+			oos.writeObject(message);
+			oos.flush();
+		}
+	}
+}

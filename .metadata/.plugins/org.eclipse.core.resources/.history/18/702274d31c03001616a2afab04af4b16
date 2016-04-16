@@ -1,0 +1,9 @@
+package network;
+
+public class UDPUpdateThread extends Thread{
+
+	
+	public UDPUpdateThread(){
+		
+	}
+}

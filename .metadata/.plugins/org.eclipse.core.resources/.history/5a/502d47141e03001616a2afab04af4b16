@@ -1,0 +1,30 @@
+package network;
+
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+
+public class UDPUpdateThread extends Thread{
+
+	private final int FPS = 40;
+	private long startTime, sleepTime;
+	private DatagramSocket serverSocket;
+	private byte[] sendData;
+	private InetAddress IPAddress;
+	private int port;
+	private Server server;
+
+	public UDPUpdateThread()throws Exception{
+		serverSocket = new DatagramSocket(9876);
+		sendData = new byte[1024];
+	}
+	
+	
+	@Override
+	public void run() {
+		super.run();
+		
+		
+		
+		
+	}
+}
